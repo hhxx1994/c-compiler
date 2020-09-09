@@ -8,6 +8,17 @@ public class ThompsonConstruction {
     RegularExpressionHandler regularExpr = null;
     private Lexer lexer = null;
     
+    private NfaMachineConstructor nfaMachineConstructor = null;
+    private NfaPrinter nfaPrinter = new NfaPrinter();
+    
+    NfaPair pair = new NfaPair();
+    
+    NfaIntepretor nfaIntepretor = null;
+    
+    DfaConstructor  dfaConstructor = null;
+    
+    MinimizeDFA    miniDfa = null;
+    
     public void runMacroExample() throws Exception {
     	System.out.println("Please enter macro definition");
     	
@@ -134,12 +145,58 @@ public class ThompsonConstruction {
     	System.out.println(s);
     }
     
+    public void runNfaIntepretorExample() {
+    	nfaIntepretor = new NfaIntepretor(pair.startNode, input);
+    	nfaIntepretor.intepretNfa();
+    }
+ 
+   public void runDfaConstructorExample() {
+	   dfaConstructor = new DfaConstructor(pair, nfaIntepretor);
+	   dfaConstructor.convertNfaToDfa();
+	   dfaConstructor.printDFA();
+   }
+    
+    private void runNfaMachineConstructorExample() throws Exception {
+    	lexer = new Lexer(regularExpr);
+    	nfaMachineConstructor = new NfaMachineConstructor(lexer);
 
+    	//nfaMachineConstructor.constructNfaForSingleCharacter(pair);
+    	//nfaMachineConstructor.constructNfaForDot(pair);
+    	//nfaMachineConstructor.constructNfaForCharacterSetWithoutNegative(pair);
+    	//nfaMachineConstructor.constructNfaForCharacterSet(pair);
+    	//nfaMachineConstructor.term(pair);
+    	//nfaMachineConstructor.constructStarClosure(pair);
+    	//nfaMachineConstructor.constructPlusClosure(pair);
+    	//nfaMachineConstructor.constructOptionsClosure(pair);
+    	//nfaMachineConstructor.factor(pair);
+    	//nfaMachineConstructor.cat_expr(pair);
+    	nfaMachineConstructor.expr(pair);
+    	nfaPrinter.printNfa(pair.startNode);
+    	
+    	
+    	
+    }
+    
+    private void runMinimizeDFAExample() {
+    	miniDfa = new MinimizeDFA(dfaConstructor);
+    	miniDfa.minimize();
+    }
+    
+   
+    
     
     public static void main(String[] args) throws Exception {
     	ThompsonConstruction construction = new ThompsonConstruction();
     	construction.runMacroExample();
     	construction.runMacroExpandExample();
     	construction.runLexerExample();
+    	
+    	construction.runNfaMachineConstructorExample();
+    	
+    	construction.runNfaIntepretorExample();
+    	
+    	construction.runDfaConstructorExample();
+    	
+    	construction.runMinimizeDFAExample();
     }
 }
